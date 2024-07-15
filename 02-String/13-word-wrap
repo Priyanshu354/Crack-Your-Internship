@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int solve(vector<int>&arr,int i,int rem,int k, vector<vector<int>>&dp){
+        
+        if(i==arr.size())return 0;
+        
+        if(dp[i][rem+1]!=-1)return dp[i][rem+1];
+        
+        int ans;
+        if(rem<arr[i]){
+            
+            ans=(rem+1)*(rem+1)+solve(arr,i+1,k-arr[i]-1,k,dp);
+        }
+        else{
+            int choice1=(rem+1)*(rem+1)+solve(arr,i+1,k-arr[i]-1,k,dp);
+            int choice2=solve(arr,i+1,rem-arr[i]-1,k,dp);
+            ans =min(choice1,choice2);
+        }
+        return dp[i][rem+1]=ans ;
+        
+    }
+    int solveWordWrap(vector<int>nums, int k) 
+    { 
+        int n=nums.size();
+        vector<vector<int>>dp(n,vector<int>(k,-1));
+        return solve(nums,1,k-nums[0]-1,k,dp);
+    } 
+};

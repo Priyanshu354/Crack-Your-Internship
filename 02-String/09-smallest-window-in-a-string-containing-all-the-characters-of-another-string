@@ -1,0 +1,101 @@
+class Solution {
+public:
+    // Function to find the smallest window in the string s consisting
+    // of all the characters of string p.
+    string smallestWindow(string s, string p) {
+        if (s.size() < p.size()) return "-1";
+
+        unordered_map<char, int> mp, ms;
+        for (char c : p) {
+            mp[c]++;
+        }
+
+        int have = 0, need = mp.size();
+        int j = 0, mini = INT_MAX;
+        pair<int, int> ans = {-1, -1};
+
+        for (int i = 0; i < s.size(); i++) {
+            ms[s[i]]++;
+
+            if (mp.find(s[i]) != mp.end() && ms[s[i]] == mp[s[i]]) {
+                have++;
+            }
+
+            while (have == need) {
+                if (i - j + 1 < mini) {
+                    mini = i - j + 1;
+                    ans = {j, i};
+                }
+
+                ms[s[j]]--;
+                if (mp.find(s[j]) != mp.end() && ms[s[j]] < mp[s[j]]) {
+                    have--;
+                }
+                j++;
+            }
+        }
+
+        if (ans.first == -1) {
+            return "-1";
+        }
+
+        string res = "";
+        for (int i = ans.first; i <= ans.second; i++) {
+            res += s[i];
+        }
+
+        return res;
+    }
+};
+
+
+// it gives you tle use vector intead of map 
+
+class Solution {
+public:
+    // Function to find the smallest window in the string s consisting
+    // of all the characters of string p.
+    string smallestWindow(string s, string p) {
+        if (s.size() < p.size()) return "-1";
+
+        vector<int> mp(26, 0), ms(26, 0);
+        for (char c : p) {
+            mp[c - 'a']++;
+        }
+
+        int have = 0, need = 0;
+        for (int count : mp) {
+            if (count > 0) need++;
+        }
+
+        int j = 0, mini = INT_MAX;
+        pair<int, int> ans = {-1, -1};
+
+        for (int i = 0; i < s.size(); i++) {
+            ms[s[i] - 'a']++;
+
+            if (mp[s[i] - 'a'] > 0 && ms[s[i] - 'a'] == mp[s[i] - 'a']) {
+                have++;
+            }
+
+            while (have == need) {
+                if (i - j + 1 < mini) {
+                    mini = i - j + 1;
+                    ans = {j, i};
+                }
+
+                ms[s[j] - 'a']--;
+                if (mp[s[j] - 'a'] > 0 && ms[s[j] - 'a'] < mp[s[j] - 'a']) {
+                    have--;
+                }
+                j++;
+            }
+        }
+
+        if (ans.first == -1) {
+            return "-1";
+        }
+
+        return s.substr(ans.first, ans.second - ans.first + 1);
+    }
+};
