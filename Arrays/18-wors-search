@@ -1,0 +1,42 @@
+class Solution {
+public:
+    bool solve(int row,int col,vector<vector<char>>& board, string& word, int index,
+    vector<vector<int>>& vis){
+        if(index == word.size()) return true;
+
+        vis[row][col] = 1;
+        int drow[] = {-1,0,1,0};
+        int dcol[] = {0,1,0,-1};
+
+        int n = board.size();
+        int m = board[0].size();
+
+        for(int i=0;i<4;i++){
+            int nrow = row + drow[i];
+            int ncol = col + dcol[i];
+
+            if(nrow >= 0 && nrow < n && ncol < m && ncol >= 0 && 
+            !vis[nrow][ncol] && board[nrow][ncol] == word[index]){
+                if(solve(nrow,ncol,board,word,index+1,vis)) return true;
+            }
+        }
+
+        vis[row][col] = 0;
+        return false;
+    }
+    bool exist(vector<vector<char>>& board, string word) {
+        int n = board.size();
+        int m = board[0].size();
+        vector<vector<int>> vis(n,vector<int>(m,0));
+
+
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(board[i][j] == word[0]){
+                    if(solve(i,j,board,word,1,vis)) return true;
+                }
+            }
+        }
+        return false;
+    }
+};
