@@ -1,0 +1,45 @@
+class Solution
+{
+    public:
+    
+    Node* reverse(Node *head)
+    {
+        Node *prev = NULL;
+        Node *curr = head;
+        while(curr != NULL)
+        {
+            Node *next_node = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next_node;
+        }
+        return prev;
+    }
+    
+    Node *compute(Node *head)
+    {
+        head = reverse(head);
+        Node* curr = head;
+        
+        int val = head -> data;
+        Node *prev = head;
+        head = head -> next;
+        
+        while(head)
+        {
+            if(head->data >= val)
+            {
+                val = head -> data;
+                prev = head;
+                head =  head->next;
+            }
+            else
+            {
+                head = head->next;
+                prev -> next = head;
+            }
+        }
+        head = reverse(curr);
+        return head;
+    }
+};

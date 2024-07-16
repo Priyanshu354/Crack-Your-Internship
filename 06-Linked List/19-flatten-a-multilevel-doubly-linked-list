@@ -1,0 +1,27 @@
+class Solution {
+public:
+    Node* flatten(Node* head) {
+        Node* curr = head;
+
+        while (curr != NULL) {
+            if (curr->child) {
+                Node* forward = curr->next;
+                Node* temp = curr->child;
+                curr->child = NULL;
+                curr->next = temp;
+                temp->prev = curr;
+                
+                while (temp->next) {
+                    temp = temp->next;
+                }
+                
+                if (forward) {
+                    temp->next = forward;
+                    forward->prev = temp;
+                }
+            }
+            curr = curr->next;
+        }
+        return head;
+    }
+};

@@ -1,0 +1,43 @@
+class Solution {
+public:
+    int sumSubarrayMins(vector<int>& arr) {
+        stack<int> s1, s2;
+        int n = arr.size();
+
+        vector<int> LS(n, 0);
+        vector<int> RS(n, 0);
+
+        for (int i = 0; i < n; i++) {
+            while (!s1.empty() && arr[s1.top()] > arr[i]) {
+                s1.pop();
+            }
+            if (s1.empty()) {
+                LS[i] = -1;
+            } else {
+                LS[i] = s1.top();
+            }
+            s1.push(i);
+        }
+
+        for (int i = n - 1; i >= 0; i--) {
+            while (!s2.empty() && arr[s2.top()] >= arr[i]) {
+                s2.pop();
+            }
+            if (s2.empty()) {
+                RS[i] = n;
+            } else {
+                RS[i] = s2.top();
+            }
+            s2.push(i);
+        }
+
+        const int MOD = 1e9 + 7;
+        long long ans = 0;
+
+        for (int i = 0; i < n; i++) {
+            ans = (ans + static_cast<long long>(arr[i]) * (i - LS[i]) * (RS[i] - i)) % MOD;
+        }
+
+        return static_cast<int>(ans);
+    }
+};

@@ -1,0 +1,23 @@
+class Solution{
+  public:
+    // nums: given vector
+    // return the Product vector P that hold product except self at each index
+    vector<long long int> productExceptSelf(vector<long long int>& nums, int n) {
+       
+        //code here   
+        vector<long long int> ans(n,0);
+        long long int postfix = 1,prefix = 1;
+        ans[0]  =  1;
+        for(int i=0;i<n-1;i++){
+            prefix *= nums[i];
+            ans[i+1] = prefix;
+        }
+        
+        for(int i = n-1;i>0; i--){
+            postfix *= nums[i];
+            ans[i-1] = ans[i-1]*postfix;
+        }
+        
+        return ans;
+    }
+};

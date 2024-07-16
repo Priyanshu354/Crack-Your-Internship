@@ -1,0 +1,40 @@
+class Solution
+{
+public:
+    Node *segregate(Node *head) {
+        if (!head || !head->next)
+            return head;
+
+        Node *dummy0 = new Node(0);
+        Node *dummy1 = new Node(0);
+        Node *dummy2 = new Node(0);
+
+        Node *zero = dummy0, *one = dummy1, *two = dummy2;
+
+        Node *current = head;
+        while (current) {
+            if (current->data == 0) {
+                zero->next = current;
+                zero = zero->next;
+            } else if (current->data == 1) {
+                one->next = current;
+                one = one->next;
+            } else {
+                two->next = current;
+                two = two->next;
+            }
+            current = current->next;
+        }
+
+        zero->next = dummy1->next ? dummy1->next : dummy2->next;
+        one->next = dummy2->next;
+        two->next = nullptr;
+
+        head = dummy0->next;
+        delete dummy0;
+        delete dummy1;
+        delete dummy2;
+
+        return head;
+    }
+};

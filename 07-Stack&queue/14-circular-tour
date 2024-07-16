@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int tour(petrolPump p[], int n) {
+        int start = 0;
+        int end = 1;
+        int balance = p[start].petrol - p[start].distance;
+        
+        while (start != end || balance < 0) {
+            while (balance < 0 && start != end) {
+                balance -= p[start].petrol - p[start].distance;
+                start = (start + 1) % n;
+                
+                if (start == 0)
+                    return -1;
+            }
+            
+            balance += p[end].petrol - p[end].distance;
+            end = (end + 1) % n;
+        }
+        
+        return start;
+    }
+};

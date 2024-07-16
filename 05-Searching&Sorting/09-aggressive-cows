@@ -1,0 +1,35 @@
+int helper(int dist,vector<int> &stalls){
+    int cow = 1;
+    int place = stalls[0];
+
+    for(int i=1;i<stalls.size();i++){
+        if(abs(stalls[i] - place) >= dist){
+            cow++;
+            place = stalls[i];
+        }
+    }
+    return cow;
+}
+
+int aggressiveCows(vector<int> &stalls, int k)
+{
+    //    Write your code here.
+    int low = 0;
+    int high = *max_element(stalls.begin(),stalls.end());
+    sort(stalls.begin(),stalls.end());
+
+    int ans = -1;
+    while(low <= high){
+        int mid = low + (high - low ) / 2;
+        int x = helper(mid,stalls);
+
+        if(x >= k){
+            ans = mid;
+            low = mid + 1;
+        }
+        else{
+            high = mid - 1;
+        }
+    }
+    return ans;
+}

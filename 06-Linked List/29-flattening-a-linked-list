@@ -1,0 +1,36 @@
+Node* solve(Node* curr, Node* dummy) {
+    Node* temp = new Node(-1);
+    Node* res = temp;
+
+    while (curr && dummy) {
+        if (curr->data < dummy->data) {
+            temp->bottom = curr;
+            curr = curr->bottom;
+        } else {
+            temp->bottom = dummy;
+            dummy = dummy->bottom;
+        }
+        temp = temp->bottom;
+    }
+
+    if (curr) {
+        temp->bottom = curr;
+    } else {
+        temp->bottom = dummy;
+    }
+
+    return res->bottom;
+}
+
+Node* flatten(Node* root) {
+    if (!root) return nullptr;
+
+    Node* dummy = nullptr;
+
+    while (root) {
+        dummy = solve(root, dummy);
+        root = root->next;
+    }
+
+    return dummy;
+}
