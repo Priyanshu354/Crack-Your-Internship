@@ -1,0 +1,25 @@
+class Solution {
+public:
+    vector<int> solve(Node* root) {
+        if (root == nullptr) {
+            return {INT_MAX, INT_MIN, 0};    
+        }
+        
+        if (root->left == nullptr && root->right == nullptr) {
+            return {root->data, root->data, 1};
+        }
+        
+        vector<int> leftSubtree = solve(root->left);
+        vector<int> rightSubtree = solve(root->right);
+      
+        if (leftSubtree[1] < root->data && rightSubtree[0] > root->data) {
+            return {min(leftSubtree[0], root->data), max(rightSubtree[1], root->data), leftSubtree[2] + rightSubtree[2] + 1};
+        } else {
+            return {INT_MIN, INT_MAX, max(leftSubtree[2], rightSubtree[2])};
+        }
+    }
+    
+    int largestBst(Node* root) {
+        return solve(root)[2];
+    }
+};

@@ -1,0 +1,36 @@
+class Solution {
+public:
+    // Function to recursively traverse the tree and count the number of cameras needed
+    int minCameraCoverHelper(TreeNode* root, int &cam) {
+        if (root == nullptr) return 1;
+        
+        int left = minCameraCoverHelper(root->left, cam);
+        int right = minCameraCoverHelper(root->right, cam);
+
+        // If either child needs a camera, place a camera at this node
+        if (left == 0 || right == 0) {
+            cam++;
+            return 2;
+        }
+
+        // If both children are covered by cameras, mark this node as covered
+        if (left == 1 && right == 1) {
+            return 0;
+        }
+
+        // If at least one child is covered but not with a camera, mark this node as covered
+        if (left + right >= 3) {
+            return 1;
+        }
+        
+        return -1; // This should never be reached, added for completeness
+    }
+    
+    // Main function to calculate the minimum number of cameras needed
+    int minCameraCover(TreeNode* root) {
+        if (root == nullptr) return 0;
+        int cam = 0;
+        if (minCameraCoverHelper(root, cam) == 0) cam++;
+        return cam;
+    }
+};

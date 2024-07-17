@@ -1,0 +1,32 @@
+class Solution {
+public:
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
+        int drow[] = {-1,0,1,0};
+        int dcol[] = {0,1,0,-1}; 
+
+        int srcColor = image[sr][sc];
+        image[sr][sc] = color;
+        int n = image.size();
+        int m = image[0].size();
+
+        vector<vector<int>> vis(n,vector<int> (m,0));
+
+        dfs(sr,sc,vis,image,drow,dcol,color,srcColor);
+        return image;
+
+    }
+    void dfs(int row,int col,vector<vector<int>>& vis,vector<vector<int>>& image, int drow[], int dcol[], int color,int srcColor){
+        vis[row][col] = 1;
+
+        for(int i=0;i<4;i++){
+            int nrow = row + drow[i];
+            int ncol = col + dcol[i];
+
+            if(nrow >= 0 && nrow < image.size() && ncol >= 0 && ncol < image[0].size() &&
+            vis[nrow][ncol] == 0 && image[nrow][ncol] == srcColor){
+                image[nrow][ncol] = color;
+                dfs(nrow,ncol,vis,image,drow,dcol,color,srcColor);
+            }
+        }
+    }
+};

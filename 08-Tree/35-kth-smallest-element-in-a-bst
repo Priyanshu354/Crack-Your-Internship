@@ -1,0 +1,24 @@
+class Solution {
+    void kthelement(TreeNode* root, int k, int &cnt, int &ans) {
+        if (root == NULL || cnt >= k) {
+            return;
+        }
+
+        kthelement(root->left, k, cnt, ans);
+        cnt++;
+        if (cnt == k) {
+            ans = root->val;
+            return;
+        }
+        kthelement(root->right, k, cnt, ans);
+    }
+
+public:
+    int kthSmallest(TreeNode* root, int k) {
+        if (root == NULL || k <= 0) return -1;
+
+        int ans = -1, cnt = 0;
+        kthelement(root, k, cnt, ans);
+        return ans;
+    }
+};

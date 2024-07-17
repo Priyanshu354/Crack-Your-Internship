@@ -1,0 +1,60 @@
+class Solution {
+public:
+    void solve(Node* root, int a, int b, unordered_map<Node*, Node*>& parent, Node*& p, Node*& q) {
+        if (root == nullptr) return;
+
+        if (root->data == a) p = root;
+        if (root->data == b) q = root;
+
+        if (root->left) {
+            parent[root->left] = root;
+            solve(root->left, a, b, parent, p, q);
+        }
+        if (root->right) {
+            parent[root->right] = root;
+            solve(root->right, a, b, parent, p, q);
+        }
+    }
+
+    int findDist(Node* root, int a, int b) {
+        unordered_map<Node*, Node*> parent;
+        Node* p = nullptr;
+        Node* q = nullptr;
+        solve(root, a, b, parent, p, q);
+
+        if (p == nullptr || q == nullptr) return -1;
+
+        queue<Node*> queue;
+        queue.push(p);
+
+        unordered_map<Node*, bool> visited;
+        visited[p] = true;
+
+        int distance = 0;
+        while (!queue.empty()) {
+            int size = queue.size();
+
+            for (int i = 0; i < size; i++) {
+                Node* node = queue.front();
+                queue.pop();
+
+                if (node == q) return distance;
+
+                if (node->left && !visited[node->left]) {
+                    queue.push(node->left);
+                    visited[node->left] = true;
+                }
+                if (node->right && !visited[node->right]) {
+                    queue.push(node->right);
+                    visited[node->right] = true;
+                }
+                if (parent.find(node) != parent.end() && !visited[parent[node]]) {
+                    queue.push(parent[node]);
+                    visited[parent[node]] = true;
+                }
+            }
+            distance++;
+        }
+        return -1;
+    }
+};

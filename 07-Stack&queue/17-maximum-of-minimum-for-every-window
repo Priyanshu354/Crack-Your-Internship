@@ -1,0 +1,55 @@
+class Solution {
+public:
+    vector<int> nextSmaller(int arr[], int n) {
+        stack<int> s;
+        vector<int> nextSmall(n, n);
+        for (int i = n - 1; i >= 0; i--) {
+            while (!s.empty() && arr[s.top()] >= arr[i]) {
+                s.pop();
+            }
+            if (!s.empty()) {
+                nextSmall[i] = s.top();
+            }
+            s.push(i);
+        }
+        return nextSmall;
+    }
+
+    vector<int> prevSmaller(int arr[], int n) {
+        stack<int> s;
+        vector<int> prevSmall(n, -1);
+        for (int i = 0; i < n; i++) {
+            while (!s.empty() && arr[s.top()] >= arr[i]) {
+                s.pop();
+            }
+            if (!s.empty()) {
+                prevSmall[i] = s.top();
+            }
+            s.push(i);
+        }
+        return prevSmall;
+    }
+
+    vector<int> maxOfMin(int arr[], int n) {
+        vector<int> nextSmall = nextSmaller(arr, n);
+        vector<int> prevSmall = prevSmaller(arr, n);
+
+        vector<int> result(n + 1, 0);
+
+        for (int i = 0; i < n; i++) {
+            int len = nextSmall[i] - prevSmall[i] - 1;
+            result[len] = max(result[len], arr[i]);
+        }
+
+        for (int i = n - 1; i >= 1; i--) {
+            result[i] = max(result[i], result[i + 1]);
+        }
+
+        vector<int> finalResult;
+        for (int i = 1; i <= n; i++) {
+            finalResult.push_back(result[i]);
+        }
+
+        return finalResult;
+    }
+};

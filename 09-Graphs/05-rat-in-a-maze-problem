@@ -1,0 +1,38 @@
+class Solution {
+public:
+    void solve(int row, int col, int drow[], int dcol[], vector<vector<int>> &m,
+               vector<vector<int>>& vis, vector<string>& ans, int n, int ms, string s) {
+        if (row == n - 1 && col == ms - 1) {
+            ans.push_back(s);
+            return;
+        }
+
+        string direction = "URDL";
+        for (int i = 0; i < 4; i++) {
+            int nrow = row + drow[i];
+            int ncol = col + dcol[i];
+
+            if (nrow >= 0 && nrow < n && ncol >= 0 && ncol < ms &&
+                vis[nrow][ncol] == 0 && m[nrow][ncol] == 1) {
+                vis[nrow][ncol] = 1;
+                solve(nrow, ncol, drow, dcol, m, vis, ans, n, ms, s + direction[i]);
+                vis[nrow][ncol] = 0;
+            }
+        }
+    }
+    vector<string> findPath(vector<vector<int>> &m) {
+        int n = m.size();
+        if(m[0][0] == 0) return {"-1"};
+        int drow[] = {-1, 0, 1, 0};
+        int dcol[] = {0, 1, 0, -1};
+
+        int ms = m[0].size();
+
+        vector<vector<int>> vis(n, vector<int>(ms, 0));
+
+        vector<string> ans;
+        vis[0][0] = 1;
+        solve(0, 0, drow, dcol, m, vis, ans, n, ms, "");
+        return ans;
+    }
+};

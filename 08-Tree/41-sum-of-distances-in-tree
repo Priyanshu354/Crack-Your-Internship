@@ -1,0 +1,45 @@
+class Solution {
+public:
+    vector<int> total_dis;
+    vector<int> child;
+    
+    void dfs(int node, vector<vector<int>>& adj, int parent, vector<int>& count, vector<int>& dist) {
+        for (int& it : adj[node]) {
+            if (it != parent) {
+                dfs(it, adj, node, count, dist);
+                count[node] += count[it];
+                dist[node] += dist[it] + count[it];
+            }
+        }
+        count[node]++;
+    }
+    
+    void dfs2(int node, vector<vector<int>>& adj, int parent, vector<int>& count, vector<int>& dist, int n) {
+        for (int& it : adj[node]) {
+            if (it != parent) {
+                dist[it] = dist[node] - count[it] + n - count[it];
+                dfs2(it, adj, node, count, dist, n);
+            }
+        }
+    }
+    
+    vector<int> sumOfDistancesInTree(int n, vector<vector<int>>& edges) {
+        vector<vector<int>> adj(n);
+        for (auto& it : edges) {
+            adj[it[0]].push_back(it[1]);
+            adj[it[1]].push_back(it[0]);
+        }
+        
+        total_dis.resize(n, 0);
+        child.resize(n, 0);
+        
+        dfs(0, adj, -1, child, total_dis);
+
+        for(auto it : child){
+            cout << it << " ";
+        }
+        dfs2(0, adj, -1, child, total_dis, n);
+        
+        return total_dis;
+    }
+};

@@ -1,0 +1,30 @@
+class Solution
+{
+    public:
+    void dfs(Node* root, Node*& pre, Node*& suc, int key) {
+        if (!root) return;
+        
+        dfs(root->left, pre, suc, key);
+        
+        if(root->key < key){
+            if(!pre) pre = root;
+            else {
+                if(pre->key < root->key) pre = root;
+            }
+        }
+        
+        if(root->key > key){
+            if(!suc) suc = root;
+            else {
+                if(suc->key > root->key) suc = root;
+            }
+        }
+        dfs(root->right, pre, suc, key);
+    }
+    
+    void findPreSuc(Node* root, Node*& pre, Node*& suc, int key) {
+        // Your code goes here
+        pre = suc = NULL;
+        dfs(root, pre, suc, key);
+    }
+};

@@ -1,0 +1,20 @@
+class Solution {
+public:
+    Node* solve(int pre[], int low, int high) {
+        if (low > high) return nullptr;
+        
+        Node* root = newNode(pre[low]);
+        int mid = low + 1;
+        while (mid <= high && pre[mid] < pre[low]) mid++;
+        
+        root->left = solve(pre, low + 1, mid - 1);
+        root->right = solve(pre, mid, high);
+        
+        return root;
+    }
+    
+    // Function that constructs BST from its preorder traversal.
+    Node* Bst(int pre[], int size) {
+        return solve(pre, 0, size - 1);
+    }
+};

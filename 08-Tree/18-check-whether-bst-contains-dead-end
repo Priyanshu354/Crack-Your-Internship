@@ -1,0 +1,20 @@
+class Solution{
+  bool solve(Node* root, int l, int h)
+    {
+        if(!root)
+        return false;
+        
+        if(abs (root->data-l)==1 and (h-root->data ==1))
+        return true;
+        bool x= solve(root->left, l, root->data);
+        bool y= solve(root->right, root->data,h );
+        return x || y;
+        
+    }
+  public:
+    bool isDeadEnd(Node *root)
+    {
+        //Your code here
+        return solve(root,0, 1e9);
+    }
+};
