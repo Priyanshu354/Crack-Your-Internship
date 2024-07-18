@@ -1,0 +1,55 @@
+class Solution {
+public:
+    int shortestBridge(vector<vector<int>>& grid) {
+        queue<pair<int,pair<int,int>>> q;
+
+        int drow[] = {-1, 0, 1, 0};
+        int dcol[] = {0, 1, 0, -1};
+        int n = grid.size();
+        bool found = false;
+
+        for (int i = 0; i < n; i++) {
+            if (found) break;
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    dfs(grid, i, j, q);
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        while (!q.empty()) {
+            auto it = q.front();
+            q.pop();
+            int dis = it.first;
+            int row = it.second.first;
+            int col = it.second.second;
+
+            for (int i = 0; i < 4; i++) {
+                int nrow = row + drow[i];
+                int ncol = col + dcol[i];
+
+                if (nrow >= 0 && ncol < n && nrow < n && ncol >= 0 && grid[nrow][ncol] != 2) {
+                    if (grid[nrow][ncol] == 1) return dis;
+                    grid[nrow][ncol] = 2;
+                    q.push({dis + 1, {nrow, ncol}});
+                }
+            }
+        }
+        return -1;
+    }
+
+private:
+    void dfs(vector<vector<int>>& grid, int row, int col, queue<pair<int,pair<int,int>>>& q) {
+        if (row < 0 || col < 0 || row >= grid.size() || col >= grid.size() || grid[row][col] != 1) return;
+
+        grid[row][col] = 2;
+        q.push({0, {row, col}});
+
+        dfs(grid, row + 1, col, q);
+        dfs(grid, row - 1, col, q);
+        dfs(grid, row, col + 1, q);
+        dfs(grid, row, col - 1, q);
+    }
+};

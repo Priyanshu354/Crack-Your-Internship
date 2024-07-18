@@ -1,0 +1,46 @@
+class Solution 
+{
+    public:
+    //Function to find out minimum steps Knight needs to reach target position.
+	int minStepToReachTarget(vector<int>&KnightPos,vector<int>&TargetPos,int N)
+	{
+	    // Code here
+	    int drow[] = {2,2,-2,-2,1,-1,1,-1};
+	    int dcol[] = {1,-1,1,-1,2,2,-2,-2};
+	    
+	    queue<pair<int,int>> q;
+	    q.push({KnightPos[0],KnightPos[1]});
+	    vector<vector<int>> vis(N+1,vector<int>(N+1,0));
+	    vis[KnightPos[0]][KnightPos[1]] = 1;
+	    
+	    int dis = 0;
+	    while(!q.empty()){
+	        int size = q.size();
+	        
+	        for(int i=0;i<size;i++){
+	            auto it = q.front();
+    	        q.pop();
+    	        
+    	        int row = it.first;
+    	        int col = it.second;
+    	        
+    	        if(row == TargetPos[0] && col == TargetPos[1]) return dis;
+    	        
+    	        for(int i=0;i<8;i++){
+    	            int nrow = row + drow[i];
+    	            int ncol = col + dcol[i];
+    	            
+    	            
+    	            if(nrow >= 1 && nrow <= N && ncol >= 1 && ncol <= N && 
+    	            !vis[nrow][ncol]){
+    	                q.push({nrow,ncol});
+    	                vis[nrow][ncol] = 1;
+    	            }
+    	        }
+	        }
+	        dis++;
+	    }
+	    
+	    return -1;
+	}
+};

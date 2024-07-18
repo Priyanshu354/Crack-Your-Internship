@@ -1,0 +1,49 @@
+class Solution {
+public:
+    string decodeString(string s) {
+        stack<string> st;
+        int i = 0;
+
+        while (i < s.size()) {
+            if (isdigit(s[i])) {
+                string temp = "";
+                while (i < s.size() && isdigit(s[i])) {
+                    temp += s[i];
+                    i++;
+                }
+                st.push(temp);
+            } else if (s[i] == '[') {
+                st.push(string(1, s[i]));
+                i++;
+            } else if (s[i] == ']') {
+                string word = "";
+                while (!st.empty() && st.top() != "[") {
+                    word = st.top() + word;
+                    st.pop();
+                }
+                st.pop();
+
+                int freq = stoi(st.top());
+                st.pop();
+
+                string res = "";
+                for (int j = 0; j < freq; j++) {
+                    res += word;
+                }
+                st.push(res);
+                i++;
+            } else {
+                st.push(string(1, s[i]));
+                i++;
+            }
+        }
+
+        string result = "";
+        while (!st.empty()) {
+            result = st.top() + result;
+            st.pop();
+        }
+
+        return result;
+    }
+};

@@ -1,0 +1,43 @@
+class Solution {
+public:
+    int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
+        vector<vector<int>> matrix(n, vector<int>(n, 1e9));
+
+        // Initialize the matrix with edge weights
+        for (auto& edge : edges) {
+            matrix[edge[0]][edge[1]] = edge[2];
+            matrix[edge[1]][edge[0]] = edge[2];
+        }
+
+        // Floyd-Warshall algorithm to find shortest paths between all pairs of vertices
+        for (int via = 0; via < n; via++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (i != j && matrix[i][via] + matrix[via][j] < matrix[i][j]) {
+                        matrix[i][j] = matrix[i][via] + matrix[via][j];
+                    }
+                }
+            }
+        }
+
+        int minReachable = INT_MAX;
+        int cityIndex = -1;
+
+        // Iterate over each city and count reachable cities within distanceThreshold
+        for (int i = 0; i < n; i++) {
+            int reachableCount = 0;
+            for (int j = 0; j < n; j++) {
+                if (i != j && matrix[i][j] <= distanceThreshold) {
+                    reachableCount++;
+                }
+            }
+            // Update the minimum reachable count and city index
+            if (reachableCount <= minReachable) {
+                minReachable = reachableCount;
+                cityIndex = i;
+            }
+        }
+
+        return cityIndex;
+    }
+};
