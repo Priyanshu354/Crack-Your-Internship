@@ -1,0 +1,33 @@
+class Solution {
+private:
+    void solve(int start, int target, vector<int>& candidates, vector<vector<int>>& ans, vector<int>& temp) {
+        if (target == 0) {
+            //cout << " push " << start << endl;
+            ans.push_back(temp);
+            return;
+        }
+
+        for (int i = start; i < candidates.size(); i++) {
+            //cout << start << " " << i << endl;
+            if (i > start && candidates[i] == candidates[i - 1]){
+                //cout << "skip" << start << " " << i << endl;
+                continue;
+            } 
+     
+            if (candidates[i] > target) return; 
+            temp.push_back(candidates[i]);
+            solve(i + 1, target - candidates[i], candidates, ans, temp);
+            temp.pop_back();
+        }
+    }
+
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(), candidates.end());
+
+        vector<vector<int>> ans;
+        vector<int> temp;
+        solve(0, target, candidates, ans, temp);
+        return ans;
+    }
+};

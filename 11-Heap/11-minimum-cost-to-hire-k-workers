@@ -1,0 +1,41 @@
+class Solution {
+public:
+    double mincostToHireWorkers(vector<int>& quality, vector<int>& wage, int k) {
+        int n = quality.size();
+        vector<pair<double, int>> ratios; // Store wage-to-quality ratios along with worker indices
+
+        // Calculate wage-to-quality ratios
+        for (int i = 0; i < n; ++i) {
+            double ratio = static_cast<double>(wage[i]) / quality[i];
+            ratios.push_back({ratio, i});
+        }
+
+        // Sort workers based on wage-to-quality ratios
+        sort(ratios.begin(), ratios.end());
+
+        double minPay = numeric_limits<double>::max();
+        int sumQuality = 0; // Sum of qualities for the current window
+
+        // Use a priority queue to track the k lowest ratios
+        priority_queue<int> maxQualities;
+
+        // Iterate through sorted workers
+        for (auto& [ratio, idx] : ratios) {
+            sumQuality += quality[idx];
+            maxQualities.push(quality[idx]);
+
+            // If the number of workers in the window exceeds k, remove the one with the highest quality
+            if (maxQualities.size() > k) {
+                sumQuality -= maxQualities.top();
+                maxQualities.pop();
+            }
+
+            // If the window size is k, calculate the total wage and update minPay
+            if (maxQualities.size() == k) {
+                minPay = min(minPay, ratio * sumQuality);
+            }
+        }
+
+        return minPay;
+    }
+};

@@ -1,0 +1,40 @@
+class Solution {
+public:
+    pair<int,int> counter(const string& s) {
+        int zero = 0;
+        int one = 0;
+        for(char c : s) {
+            if(c == '1') {
+                one++;
+            }
+            else {
+                zero++;
+            }
+        }
+        return {zero, one};
+    }
+
+    int solve(int i, int m, int n, vector<pair<int,int>>& v,vector<vector<vector<int>>>& dp) {
+        if(i < 0 || (m == 0 && n == 0)) return 0;
+
+        if(dp[i][m][n] != -1) return dp[i][m][n];
+        int take = 0;
+        if(v[i].first <= m && v[i].second <= n) {
+            take = 1 + solve(i - 1, m - v[i].first, n - v[i].second, v,dp);
+        }
+        int notTake = solve(i - 1, m, n, v,dp);
+
+        return dp[i][m][n] = max(take, notTake);
+    }
+
+    int findMaxForm(vector<string>& strs, int m, int n) {
+        vector<pair<int,int>> v;
+        for(const auto& str : strs) {
+            v.push_back(counter(str));
+        }
+
+        int size = v.size();
+        vector<vector<vector<int>>> dp(size,vector<vector<int>> (m+1,vector<int>(n+1,-1)));
+        return solve(size - 1, m, n, v,dp);
+    }
+};

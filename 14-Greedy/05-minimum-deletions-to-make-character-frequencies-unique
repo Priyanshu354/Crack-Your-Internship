@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int minDeletions(string s) {
+        unordered_map<int,int> m;
+
+        int maxi = 0;
+        for(auto c : s){
+            m[c]++;
+            maxi = max(maxi,m[c]);
+        }
+
+        vector<int> freq;
+        for(auto it : m){
+            freq.push_back(it.second);
+        }
+
+        sort(freq.begin(),freq.end());
+
+        int ans = 0;
+        for(int i=freq.size()-1;i>=0;i--){
+            if(freq[i] == maxi){
+                maxi--;
+            }
+            else if(freq[i] > maxi){
+                ans += (freq[i] - maxi);
+                maxi--;
+            }
+            else{
+                maxi = freq[i]-1;
+            }
+            maxi = max(0,maxi);
+        }
+        return ans;
+    }
+};
