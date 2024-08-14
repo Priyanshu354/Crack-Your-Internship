@@ -1,0 +1,43 @@
+class Solution {
+public:
+    double dfs(string src, string des, unordered_map<string,vector<pair<string,double>>>& m, unordered_map<string,bool>& visited) {
+        if (m.find(src) == m.end() || m.find(des) == m.end())
+            return -1.0;
+
+        if (src == des)
+            return 1.0;
+
+        visited[src] = true;
+        for (auto& neighbor : m[src]) {
+            if (!visited[neighbor.first]) {
+                double result = dfs(neighbor.first, des, m, visited);
+                if (result != -1.0)
+                    return result * neighbor.second;
+            }
+        }
+        return -1.0;
+    }
+
+    vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
+        unordered_map<string,vector<pair<string,double>>> m;
+
+        int i = 0;
+        for (auto& equation : equations) {
+            string u = equation[0];
+            string v = equation[1];
+            double val = values[i++];
+
+            m[u].push_back({v, val});
+            m[v].push_back({u, 1.0 / val});
+        }
+
+        vector<double> result;
+        for (auto& query : queries) {
+            string src = query[0];
+            string des = query[1];
+            unordered_map<string,bool> visited;
+            result.push_back(dfs(src, des, m, visited));
+        }
+        return result;
+    }
+};

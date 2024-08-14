@@ -1,0 +1,66 @@
+#include <vector>
+using namespace std;
+
+class DisjointSet{
+public:
+    vector<int> rank,parent;
+    DisjointSet(int n){
+        rank.resize(n+1,0);
+        parent.resize(n+1);
+        for(int i=0;i<=n;i++){
+            parent[i] = i;
+        }
+    }
+
+    int findUParent(int u){
+        if(parent[u] == u) return u;
+        return parent[u] = findUParent(parent[u]);
+    }
+
+    void unionByRank(int u,int v){
+        int up_u=findUParent(u);
+        int up_v=findUParent(v);
+
+        if(up_u==up_v){
+            return ;
+        }
+        if(rank[up_v]>rank[up_u]){
+            parent[up_u]=up_v;
+        }
+        else if(rank[up_v]<rank[up_u]){
+            parent[up_v]=up_u;
+        }
+        else{
+            parent[up_u]=up_v;
+            rank[up_v]++;
+        }
+    }
+};
+
+class Solution {
+public:
+    int makeConnected(int n, vector<vector<int>>& connections) {
+        DisjointSet ds(n);
+        int extra = 0;
+        for(auto it : connections){
+            int u = it[0]; // Corrected the indices, should be 0 and 1 instead of 1 and 2
+            int v = it[1]; // Corrected the indices, should be 0 and 1 instead of 1 and 2
+
+            if(ds.findUParent(u) == ds.findUParent(v)){
+                extra++;
+            }
+            else{
+                ds.unionByRank(u,v);
+            }
+        }
+
+        int cnt = 0;
+        for(int i=0;i<n;i++){
+            if(ds.findUParent(i) == i) cnt++; // Corrected the function name to findUParent(i)
+        }
+        
+        if(extra >=  cnt - 1) return cnt - 1; // Corrected the condition and returned value
+        return -1;
+
+    }
+};
