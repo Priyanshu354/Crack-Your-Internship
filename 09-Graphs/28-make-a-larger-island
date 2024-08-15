@@ -1,0 +1,88 @@
+class Solution {
+public:
+    void dfs(int row, int col, vector<vector<int>>& vis, vector<vector<int>>& grid, int &cnt, int connected) {
+        vis[row][col] = 1;
+
+        int drow[] = {-1, 0, +1, 0};
+        int dcol[] = {0, +1, 0, -1};
+
+        for (int i = 0; i < 4; i++) {
+            int nrow = row + drow[i];
+            int ncol = col + dcol[i];
+
+            if (nrow >= 0 && nrow < grid.size() && ncol >= 0 && ncol < grid[0].size() && 
+                !vis[nrow][ncol] && grid[nrow][ncol] == 1) {  
+                cnt++;
+                dfs(nrow, ncol, vis, grid, cnt, connected);
+            }
+        }
+        grid[row][col] = connected;
+    }
+
+    int largestIsland(vector<vector<int>>& grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+
+        vector<vector<int>> vis(n, vector<int>(m, 0));
+
+        vector<int> connected = {-1, -1};
+        int con = 2;
+
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (!vis[i][j] && grid[i][j] == 1) {
+                    int cnt = 1;
+                    dfs(i, j, vis, grid, cnt, con);
+                    ans = max(ans,cnt);
+                    connected.push_back(cnt);
+                    con++;
+                }
+            }
+        }
+
+        // // Debugging print statements
+        // for (int i = 0; i < n; i++) {
+        //     for (int j = 0; j < m; j++) {
+        //         cout << grid[i][j] << " ";
+        //     }
+        //     cout << endl;
+        // }
+
+        // for (int i = 0; i < connected.size(); i++) {
+        //     cout << connected[i] << " ";
+        // }
+        // cout << endl;
+
+
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j] == 0){
+                    //cout << i << " " << j << endl;
+                    int drow[] = {-1, 0, +1, 0};
+                    int dcol[] = {0, +1, 0, -1};
+
+                    unordered_set<int> st;
+                    for(int k=0;k<4;k++){
+                        int nrow = i + drow[k];
+                        int ncol = j + dcol[k];
+
+                        if (nrow >= 0 && nrow < grid.size() 
+                        && ncol >= 0 && ncol < grid[0].size() && grid[nrow][ncol] != 0) {
+                            st.insert(grid[nrow][ncol]);
+                        }
+                    }
+
+                    int temp = 1;
+                    for(auto it : st){
+                        temp += connected[it];
+                    }
+
+                    ans = max(ans,temp);
+                }
+            }
+        }
+
+        return ans;
+    }
+};

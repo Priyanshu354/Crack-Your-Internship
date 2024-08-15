@@ -1,0 +1,29 @@
+class Solution {
+public:
+    vector<vector<string>> displayContacts(int n, string contact[], string s) {
+        map<string, set<string>> m;
+        string temp = "";
+
+        for(int i = 0; i < s.size(); i++) {
+            temp += s[i];
+            for(int j = 0; j < n; j++) {
+                string word = contact[j].substr(0, i + 1);
+                if(word == temp) {
+                    m[temp].insert(contact[j]);
+                }
+            }
+        }
+
+        vector<vector<string>> ans;
+        for(int i = 0; i < s.size(); i++) {
+            string prefix = s.substr(0, i + 1);
+            if(m.find(prefix) != m.end()) {
+                ans.push_back(vector<string>(m[prefix].begin(), m[prefix].end()));
+            } else {
+                ans.push_back({"0"});
+            }
+        }
+
+        return ans;
+    }
+};

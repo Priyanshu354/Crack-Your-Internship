@@ -1,0 +1,48 @@
+class Trie {
+public:
+    Trie* links[26];
+    bool flag;
+
+    Trie() {
+        for(int i = 0; i < 26; i++) 
+            links[i] = NULL;
+        flag = false;
+    }
+
+    void insert(string word) {
+        Trie* curr = this;
+        for(auto c : word) {
+            int idx = c - 'a';
+            if(!curr->links[idx]) {
+                curr->links[idx] = new Trie();
+            }
+            curr = curr->links[idx];
+        }
+        curr->flag = true;
+    }
+};
+
+class Solution {
+public:
+    bool solve(int pos, string &A, Trie* root) {
+        if(pos == A.size()) return true;
+        Trie* curr = root;
+        for(int i = pos; i < A.size(); i++) {
+            int idx = A[i] - 'a';
+            if(!curr->links[idx]) return false;
+            curr = curr->links[idx];
+            if(curr->flag) {
+                if(solve(i + 1, A, root)) return true;
+            }
+        }
+        return false;
+    }
+
+    int wordBreak(string A, vector<string> &B) {
+        Trie* root = new Trie();
+        for(auto &word : B) {
+            root->insert(word);
+        }
+        return solve(0, A, root);
+    }
+};
