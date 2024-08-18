@@ -1,0 +1,30 @@
+class Solution 
+{
+    private:
+    bool static comp(Job val1, Job val2){
+        return val1.profit > val2.profit;
+    }
+    public:
+    //Function to find the maximum profit and the number of jobs done.
+    vector<int> JobScheduling(Job arr[], int n) 
+    { 
+        sort(arr, arr+n, comp);
+        int tot_profit = 0, cnt = 0, max_deadline = -1;
+        for(int i=0; i<n; i++)
+            max_deadline = max(max_deadline, arr[i].dead);
+        
+        vector<int> mpp(max_deadline+1, -1);
+        for(int i=0; i<n; i++){
+            for(int j=arr[i].dead; j>0; j--){
+                if(mpp[j] == -1){
+                    mpp[j] = arr[i].id;
+                    tot_profit += arr[i].profit;
+                    cnt++;
+                    break;
+                }
+            }
+        }
+        
+        return {cnt, tot_profit};
+    } 
+};

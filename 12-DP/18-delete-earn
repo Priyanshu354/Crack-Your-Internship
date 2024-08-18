@@ -1,0 +1,34 @@
+class Solution {
+public:
+    int solve(int i,vector<pair<int,int>>&v, vector<int>& dp){
+        if(i >= v.size()) return 0;
+
+        if(dp[i] != -1) return dp[i];
+
+        int take = v[i].first * v[i].second;
+        if(i+1 < v.size() && v[i+1].first == v[i].first+1){
+            take += solve(i+2,v,dp);
+        }
+        else{
+            take += solve(i+1,v,dp);
+        }
+        int nontake = solve(i+1,v,dp);
+        
+        return dp[i] = max(take,nontake);
+    }
+    int deleteAndEarn(vector<int>& nums) {
+        map<int,int> m;
+        for(int i=0;i<nums.size();i++){
+            m[nums[i]]++;
+        }
+
+        vector<pair<int,int>> v;
+
+        for(auto it : m){
+            v.push_back({it.first,it.second});
+        }
+
+        vector<int> dp(v.size(),-1);
+        return solve(0,v,dp);
+    }
+};
